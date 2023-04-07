@@ -1,83 +1,58 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
+var userInput = ""
 
-
-
-// var saveButton = $('#hour-1 .saveBtn');
-// var textArea1 = $('#hour-1 textarea');
-
-
-// saveButton1.on('click', function(event) {
-//   event.preventDefault();
-//   var text = textArea1.val();
-//   localStorage.setItem('text1', JSON.stringify(text));
-//   console.log(text);
-//   retrieved('text1');
-// });
-
-// div1.removeClass('future').addClass('present');
- var userInput = ""
-var currentTime = dayjs().format('MMMM D, YYYY');
-$('#3a').text(currentTime);
-
+// loads the page
 
 $(document).ready(function () {
   console.log("first output working")
 
+  // current time output var
+var currentTime = dayjs().format('MMMM D, YYYY');
+$('#currentDay').text(currentTime);
+
+  // event listener for all elements with class "saveBtn"
   $(".saveBtn").on("click", function () {
 
-    var timeIdx = $(this).parent()[0].id;
-    var textArea = $(this).siblings("textarea")[0].value;
+    // get the parent ID and the value of the sibling textarea
+    var textArea = $(this).siblings(".description").val();
+    var timeIdx = $(this).parent().attr("id");
 
-    localStorage.setItem('textArea', JSON.stringify(textArea));
-
-    var retrievedText = JSON.parse(localStorage.getItem('textArea'));
-    
-    $('#userInput').text(retrievedText);
-    console.log(retrievedText);
-
+// push to local
+    localStorage.setItem(timeIdx, textArea);
     console.log(timeIdx);
     console.log(textArea);
+  });
 
+// time block
+$(".time-block").each(function() {
+  var timeIdx = $(this).attr("id");
 
-  })
-
-
-  console.log(dayjs().format("HH"));
-  $("#currentDay").text(dayjs().format("dddd, MMMM D"))
+// store to local
+  var storedValue = localStorage.getItem(timeIdx);
+// test LS 
+  if (storedValue !== null)
+  $(this).find(".description").val(storedValue);
 });
 
 
+setInterval (function() {
+  $(".time-block").each(function() {
 
+    var timeIdx = $(this).attr("id");
+  // removes hour -
+    var hourStr = timeIdx.slice(5);
 
+   
+    var hourNum = parseInt(hourStr);
+    var timeNum = parseInt(dayjs().format("HH"));
 
-function retrieved() {
-  var retrievedText = JSON.parse(localStorage.getItem('textArea'));
- 
-  // textArea.val(retrievedText);
-}
-retrieved('textArea');
-
-
-
-
-
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
+    //Set colours for times
+    if (hourNum < timeNum) {
+      $(this).addClass("past");
+    } else if (hourNum == timeNum) {
+      $(this).addClass("present");
+    } else {
+      $(this).addClass("future");
+    }
+  }, 1000);
+  });
+});
