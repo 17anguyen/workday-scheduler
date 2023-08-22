@@ -1,4 +1,6 @@
-# 05 Third-Party APIs: Work Day Scheduler
+# Third-Party APIs: Work Day Scheduler
+
+This applicaiton was built using days.js to create a work day scheduler
 
 ## Screen Capture 
 ![image](https://user-images.githubusercontent.com/43556891/230556386-1a9641ce-ac61-4fc8-8018-2100cbd8f447.png)
